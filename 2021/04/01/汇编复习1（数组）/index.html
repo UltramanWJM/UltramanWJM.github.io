@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Jamal Wang"><meta name="renderer" content="webkit"><meta name="copyright" content="Jamal Wang"><meta name="keywords" content="Hexo"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>关于数组的建立与访问（16位汇编) · WJM's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.4.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/WJM/Pai.jpg"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Jamal</div><div class="profile-signature">Keep going!</div><div class="friends"><div>FRIENDS</div><span><a href="https://blog.csdn.net/ultramanWJM?spm=1001.2100.3001.5343" target="_black">friendA</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/WJM/background2.jpg);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">WJM's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">关于数组的建立与访问（16位汇编)</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2021-04-01</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1 id="Review1（array）"><a href="#Review1（array）" class="headerlink" title="Review1（array）"></a>Review1（array）</h1><h2 id="16位汇编与32位汇编的区别"><a href="#16位汇编与32位汇编的区别" class="headerlink" title="16位汇编与32位汇编的区别"></a>16位汇编与32位汇编的区别</h2><h3 id="1-宽度的区别"><a href="#1-宽度的区别" class="headerlink" title="1. 宽度的区别"></a>1. 宽度的区别</h3><p>16位汇编是在<font color = blue>dos环境</font>下的汇编语言。</p>
+<p>32位汇编是在<font color = blue>windows</font>或<font color = blue>linux</font>环境下的汇编语言。</p>
+<p>16位汇编的寄存器和地址都是16位，32位汇编的寄存器和地址都是32位。</p>
+<h3 id="2-调用操作系统函数时有区别"><a href="#2-调用操作系统函数时有区别" class="headerlink" title="2. 调用操作系统函数时有区别"></a>2. 调用操作系统函数时有区别</h3><p>例如在屏幕上输出一句话：</p>
+<p>32位汇编可以调用==MessageBox==这个函数，通过弹框输出；</p>
+<p>16位汇编需要调用==int 21h==的==9==号功能。</p>
+<p>使用16位寄存器及地址与使用32位寄存器及地址在__<font color = red>语法</font>__上差别不大。</p>
+<p>eg.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov ax, 1;   &#x2F;&#x2F;16位寄存器</span><br><span class="line">mov eax, 1;  &#x2F;&#x2F;32位寄存器</span><br><span class="line">mov word ptr ds : [1000h], 1234h;     &#x2F;&#x2F;16位地址</span><br><span class="line">mov word ptr ds : [00401000h], 1234h; &#x2F;&#x2F;32位地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-关于Register"><a href="#3-关于Register" class="headerlink" title="3. 关于Register"></a>3. 关于Register</h3><p>在<font color = blue>32位汇编</font>中，寄存器是32位的。以<strong>eax</strong>举例，它的低16位就称为<strong>ax</strong>，高16位没有名字。</p>
+<p>在<font color = blue>16位汇编</font>中，寄存器是16位的。以<strong>ax</strong>举例，它的低8位称为<strong>al</strong>，高8位称为<strong>ah</strong>。</p>
+<h2 id="汇编中数组的定义与使用"><a href="#汇编中数组的定义与使用" class="headerlink" title="汇编中数组的定义与使用"></a>汇编中数组的定义与使用</h2><h3 id="1-定义"><a href="#1-定义" class="headerlink" title="1. 定义"></a>1. 定义</h3><p>汇编的类型根据变量的长度来进行区分，因此定义变量时使用五个关键字：<font color = red>DB DW DD DQ DT</font>(常用DB，DW)</p>
+<p><strong><font size = 4 color = red>DB</font></strong> (Define Byte) : 即定义的变量占一个字节的长度。（将定义的变量值放入一个字节的内存空间）<font color = blue>unsigned char</font></p>
+<p>eg.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a DB 7h  ;将7h放入内存的某一个字节</span><br><span class="line">a DB &#39;h&#39; ;存入h的ASCⅡ码48h </span><br></pre></td></tr></table></figure>
+
+<p>同样，可以通过<font color = red>DB</font>定义数组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a DB 48h, 65h, 6Ch, 6Ch, 6Fh, 00h </span><br><span class="line">;等价于</span><br><span class="line">b DB &#39;Hello&#39;,0</span><br></pre></td></tr></table></figure>
+
+<p>定义一个具有一系列相同元素的数组可以使用<font color = red>DUP</font>关键字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c DB 6 DUP(6)</span><br><span class="line">;等价于</span><br><span class="line">c DB 6,6,6,6,6,6</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d DB 3 DUP(1,2)</span><br><span class="line">;等价于</span><br><span class="line">d DB 1,2,1,2,1,2</span><br></pre></td></tr></table></figure>
+
+<p><strong><font size = 4 color = red>DW</font></strong>(Define Word) : 定义一个字（两个字节）。<font color = blue>unsigned short int</font></p>
+<p><strong><font size = 4 color = red>DD</font></strong>(Define Double word) : 定义双字（四个字节）。<font color = blue>定义一个32位小数（即float类型）</font></p>
+<p><strong><font size = 4 color = red>DQ</font></strong>(Define Quartet word) : 定义四字（八个字节）。<font color = blue>可定义64位整数quadruple word或double类型的小数</font></p>
+<p><strong><font size = 4 color = red>DT</font></strong>(Define Ten Byte) : 定义十字。<font color = blue>可以定义一个80位的小数（即long double类型的小数）</font></p>
+<h3 id="2-引用"><a href="#2-引用" class="headerlink" title="2.引用"></a>2.引用</h3><p>与C语言形式类似，汇编中表示数组的形式也是<font color = blue>数组名 [ 下标 ]</font>，但需要注意的是在引用数组元素之前，必须先保证段寄存器**<font color = red>ds</font><strong>中已经保存了该数组的</strong><font color = red>段地址</font>**。</p>
+<p><font size = 5>==段地址 + 偏移地址 $\Longrightarrow$  真实地址(远指针)==</font></p>
+<p>比如这样的一块数据段定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">a DB 100 dup(0)</span><br><span class="line">b DB &quot;Hello&quot;, 0Dh, 0Ah</span><br><span class="line">data ends</span><br></pre></td></tr></table></figure>
+
+<p>在下面的程序中如果想要访问数组a或者b中的元素，就需要在访问之前在<font color = red><strong>ds</strong></font>中保存数组的段地址。</p>
+<p>对于这段数据段定义，数组a和b的<strong>段地址</strong>是相同的，他们的区别在于<strong>偏移地址</strong>。</p>
+<p>段地址的表达方式有两种，因此下面两句是<font color = blue>等价</font>的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov ax, seg a</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov ax, data</span><br></pre></td></tr></table></figure>
+
+<p>我觉得可以这么理解，data segment就是定义了一个连续的空间，用于存放数组元素。类似于C语言的一个数组，数组名就是数组的地址，即<font color = red>data</font>.而对于 seg a 这种表达方式很直观没有什么赘述的。</p>
+<p>在这里有一点细节，就是以s结尾的寄存器是段寄存器，段寄存器有一个怪脾气：<font color = red size = 4><strong>不直接接受常数</strong></font>。需要一个临时寄存器在中间中转一下。像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov ax, data</span><br><span class="line">mov ds, ax</span><br></pre></td></tr></table></figure>
+
+<p>下面举一个访问修改数组中的值的操作的例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov di, 0 ;di作为数组a的下标</span><br><span class="line">mov ah, 01h ;</span><br><span class="line">int 21h ;调用21的1号功能：读取一个字符，并将读取的值放在al中</span><br><span class="line">mov a[di], al ;将读取的字符的ascⅡ存入数组</span><br><span class="line">add di, 1 ;数组下标加一</span><br></pre></td></tr></table></figure>
+
+<p><font color = red><strong>注意</strong></font>: db是一个byte，相当于C语言中的char，而16位的寄存器有两个byte，所以赋值的时候不要忘记只用寄存器的一半，即al或者ah。</p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="https://UltramanWJM.github.io">Jamal Wang</a></p><p> <span>Link:  </span><a href="https://ultramanwjm.github.io/2021/04/01/%E6%B1%87%E7%BC%96%E5%A4%8D%E4%B9%A01%EF%BC%88%E6%95%B0%E7%BB%84%EF%BC%89/">https://ultramanwjm.github.io/2021/04/01/%E6%B1%87%E7%BC%96%E5%A4%8D%E4%B9%A01%EF%BC%88%E6%95%B0%E7%BB%84%EF%BC%89/</a></p><p> <span>Copyright:  </span><span>Keep moving!!! Never stop!!!</span></p></div><div class="post-paginator"><a class="nextSlogan" href="/2021/03/29/Operator%20Overload(C++)/" title="C++运算符的重载"><span>NextPost ></span><br><span class="nextTitle">C++运算符的重载</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Review1%EF%BC%88array%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Review1（array）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#16%E4%BD%8D%E6%B1%87%E7%BC%96%E4%B8%8E32%E4%BD%8D%E6%B1%87%E7%BC%96%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.</span> <span class="toc-text">16位汇编与32位汇编的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%BD%E5%BA%A6%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 宽度的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B0%83%E7%94%A8%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0%E6%97%B6%E6%9C%89%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 调用操作系统函数时有区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%85%B3%E4%BA%8ERegister"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. 关于Register</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%AE%9A%E4%B9%89%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">汇编中数组的定义与使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9A%E4%B9%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.引用</span></a></li></ol></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
