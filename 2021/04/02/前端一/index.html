@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Jamal Wang"><meta name="renderer" content="webkit"><meta name="copyright" content="Jamal Wang"><meta name="keywords" content="Hexo"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>前端一 · WJM's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.4.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/WJM/Pai.jpg"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Jamal</div><div class="profile-signature">Keep going!</div><div class="friends"><div>FRIENDS</div><span><a href="https://blog.csdn.net/ultramanWJM?spm=1001.2100.3001.5343" target="_black">friendA</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/WJM/background2.jpg);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">WJM's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">前端一</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2021-04-02</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><p>[toc]</p>
+<h1 id="前端-———-Day1"><a href="#前端-———-Day1" class="headerlink" title="前端 ——— Day1"></a>前端 ——— Day1</h1><h2 id="1-网页"><a href="#1-网页" class="headerlink" title="1. 网页"></a>1. 网页</h2><h3 id="1-1-什么是网页"><a href="#1-1-什么是网页" class="headerlink" title="1.1 什么是网页"></a>1.1 什么是网页</h3><p>网站是网页集合，网页是网站中的一员，通常是<font color = red>HTML格式的文件</font>，需要通过浏览器阅读。</p>
+<p>网页是构成网站的基本元素，通常由图片、链接、声音、文字等元素组成。通常看见的网页，常见以.htm或.html为后缀，因此俗称<font color = red>HTML文件</font>。</p>
+<h3 id="1-2-什么是HTML"><a href="#1-2-什么是HTML" class="headerlink" title="1.2 什么是HTML"></a>1.2 什么是HTML</h3><p><font color = red><strong>超文本标记语言(Hyper Text Markup Language)</strong></font></p>
+<p>不是编程语言，而是<strong>标记语言</strong>（markup language）</p>
+<p>标记语言是一套标记标签。</p>
+<p>所谓超文本，有两层含义：</p>
+<ol>
+<li>超于文本限制（可以加入图片声音等）</li>
+<li>越级链接文本（可以从一个文件跳转到另一个文件）</li>
+</ol>
+<h3 id="1-3-网页的形成"><a href="#1-3-网页的形成" class="headerlink" title="1.3 网页的形成"></a>1.3 网页的形成</h3><p>…….</p>
+<h2 id="2-常用浏览器"><a href="#2-常用浏览器" class="headerlink" title="2. 常用浏览器"></a>2. 常用浏览器</h2><h3 id="2-1-常用浏览器"><a href="#2-1-常用浏览器" class="headerlink" title="2.1 常用浏览器"></a>2.1 常用浏览器</h3><p><font size = 6><font color = red><strong>Google</strong></font> Firefox IE Edge Safari</font></p>
+<h3 id="2-2-浏览器内核"><a href="#2-2-浏览器内核" class="headerlink" title="2.2 浏览器内核"></a>2.2 浏览器内核</h3><table>
+<thead>
+<tr>
+<th>浏览器</th>
+<th>内核</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IE</td>
+<td>Trident</td>
+<td>IE、猎豹安全、360极速、百度</td>
+</tr>
+<tr>
+<td>firefox</td>
+<td>Gecko</td>
+<td>火狐浏览器内核</td>
+</tr>
+<tr>
+<td>Safari</td>
+<td>Webkit</td>
+<td>苹果浏览器内核</td>
+</tr>
+<tr>
+<td>chrome/Opera</td>
+<td>Blink</td>
+<td>chrome/Opera内核, Blink其实是Webkit的分支</td>
+</tr>
+</tbody></table>
+<p>国产一般用Webkit或者Blink</p>
+<h2 id="3-Web-标准"><a href="#3-Web-标准" class="headerlink" title="3. Web 标准"></a>3. Web 标准</h2><h3 id="3-1-Why"><a href="#3-1-Why" class="headerlink" title="3.1 Why"></a>3.1 Why</h3><p>浏览器不同，他们显示页面或者排版就有些许差异。</p>
+<h3 id="3-2-Consist"><a href="#3-2-Consist" class="headerlink" title="3.2 Consist"></a>3.2 Consist</h3><p>主要包括<font color = red><strong>Structure Presentation Behavior</strong></font></p>
+<table>
+<thead>
+<tr>
+<th>标准</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Structure 结构</td>
+<td>对<strong>网页元素</strong>进行整理和分类  HTML</td>
+</tr>
+<tr>
+<td>Presentation 表现</td>
+<td>用于设置网页元素的版式，颜色，大小等<strong>外观样式</strong>    CSS</td>
+</tr>
+<tr>
+<td>Behavior 行为</td>
+<td>网页模型的定义以及<strong>交互</strong>的编写   Javascript</td>
+</tr>
+</tbody></table>
+<p><strong>最佳体验方案:</strong>     <font color = red size  = 6><strong>结构 样式 行为 相分离</strong></font></p>
+<h2 id="4-HTML-标签"><a href="#4-HTML-标签" class="headerlink" title="4. HTML 标签"></a>4. HTML 标签</h2><h3 id="4-1-语法规范"><a href="#4-1-语法规范" class="headerlink" title="4.1 语法规范"></a>4.1 语法规范</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span> <span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span> //单标签</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>HTML 标签由<font color = red> 由尖括号包围的关键词</font></li>
+<li>通常成对出现，称为<font color = red><strong>双标签</strong></font></li>
+<li>有些特殊的标签必须是单个标签，例如&lt; br /&gt;，我们称为<font color = red><strong>单标签</strong></font></li>
+</ol>
+<h3 id="4-2-标签关系"><a href="#4-2-标签关系" class="headerlink" title="4.2 标签关系"></a>4.2 标签关系</h3><p><font color = red><strong>包含关系</strong></font>   and    <font color = red><strong>并列关系</strong></font></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span> <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span> <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-HTML-基本结构标签"><a href="#5-HTML-基本结构标签" class="headerlink" title="5. HTML 基本结构标签"></a>5. HTML 基本结构标签</h2><h3 id="5-1-第一个HTML网页"><a href="#5-1-第一个HTML网页" class="headerlink" title="5.1 第一个HTML网页"></a>5.1 第一个HTML网页</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span> 我的第一个网页<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        你我之间，黑马洗练，月薪十万，一飞冲天</span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>标签名</th>
+<th>定义</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#60;html&#62;&#60;/html&#62;</td>
+<td>HTML标签</td>
+<td>页面中最大的标签，称之为<font color = red> 根标签</font></td>
+</tr>
+<tr>
+<td>&#60;head&gt;&#60;/head&gt;</td>
+<td>文档的头部</td>
+<td>注意在head标签中我们必须要设置的标签是title</td>
+</tr>
+<tr>
+<td>&#60;title&gt;&#60;/title&gt;</td>
+<td>文档的标题</td>
+<td>让页面拥有一个属于自己的网页标题</td>
+</tr>
+<tr>
+<td>&#60;body&gt;&#60;/body&gt;</td>
+<td>文档的主体</td>
+<td>元素包含文档的所有内容，页面内容</td>
+</tr>
+</tbody></table>
+<h2 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h2><p>今天效率极低！怎么学的这么慢！明天一定学快一点！加油！</p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="https://UltramanWJM.github.io">Jamal Wang</a></p><p> <span>Link:  </span><a href="https://ultramanwjm.github.io/2021/04/02/%E5%89%8D%E7%AB%AF%E4%B8%80/">https://ultramanwjm.github.io/2021/04/02/%E5%89%8D%E7%AB%AF%E4%B8%80/</a></p><p> <span>Copyright:  </span><span>Keep moving!!! Never stop!!!</span></p></div><div class="post-paginator"><a class="nextSlogan" href="/2021/04/01/%E6%B1%87%E7%BC%96%E5%A4%8D%E4%B9%A01%EF%BC%88%E6%95%B0%E7%BB%84%EF%BC%89/" title="关于数组的建立与访问（16位汇编)"><span>NextPost ></span><br><span class="nextTitle">关于数组的建立与访问（16位汇编)</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF-%E2%80%94%E2%80%94%E2%80%94-Day1"><span class="toc-number">1.</span> <span class="toc-text">前端 ——— Day1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%BD%91%E9%A1%B5"><span class="toc-number">1.1.</span> <span class="toc-text">1. 网页</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BD%91%E9%A1%B5"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 什么是网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%BB%80%E4%B9%88%E6%98%AFHTML"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 什么是HTML</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E7%BD%91%E9%A1%B5%E7%9A%84%E5%BD%A2%E6%88%90"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 网页的形成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B8%B8%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">1.2.</span> <span class="toc-text">2. 常用浏览器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%B8%B8%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 常用浏览器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%B5%8F%E8%A7%88%E5%99%A8%E5%86%85%E6%A0%B8"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 浏览器内核</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Web-%E6%A0%87%E5%87%86"><span class="toc-number">1.3.</span> <span class="toc-text">3. Web 标准</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Why"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 Why</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Consist"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 Consist</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-HTML-%E6%A0%87%E7%AD%BE"><span class="toc-number">1.4.</span> <span class="toc-text">4. HTML 标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E8%AF%AD%E6%B3%95%E8%A7%84%E8%8C%83"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 语法规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%A0%87%E7%AD%BE%E5%85%B3%E7%B3%BB"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 标签关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-HTML-%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84%E6%A0%87%E7%AD%BE"><span class="toc-number">1.5.</span> <span class="toc-text">5. HTML 基本结构标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%AC%AC%E4%B8%80%E4%B8%AAHTML%E7%BD%91%E9%A1%B5"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 第一个HTML网页</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">6. 总结</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
