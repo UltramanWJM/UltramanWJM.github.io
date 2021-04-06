@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Jamal Wang"><meta name="renderer" content="webkit"><meta name="copyright" content="Jamal Wang"><meta name="keywords" content="Hexo"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>前端二 · WJM's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.4.0"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/WJM/Pai.jpg"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Jamal</div><div class="profile-signature">Keep going!</div><div class="friends"><div>FRIENDS</div><span><a href="https://blog.csdn.net/ultramanWJM?spm=1001.2100.3001.5343" target="_black">friendA</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/WJM/background2.jpg);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">WJM's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">前端二</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2021-04-06</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><p>[toc]</p>
+<h1 id="前端-———-Day2"><a href="#前端-———-Day2" class="headerlink" title="前端 ——— Day2"></a>前端 ——— Day2</h1><h2 id="VSCode-工具生成骨架标签新增代码-自动生成"><a href="#VSCode-工具生成骨架标签新增代码-自动生成" class="headerlink" title="VSCode 工具生成骨架标签新增代码(自动生成)"></a>VSCode 工具生成骨架标签新增代码(自动生成)</h2><h3 id="1-lt-DOCTYPE-gt-标签"><a href="#1-lt-DOCTYPE-gt-标签" class="headerlink" title="1. &lt;!DOCTYPE&gt; 标签"></a>1. &lt;!DOCTYPE&gt; 标签</h3><p><font color = red>文档类型</font>声明，作用告诉浏览器使用哪种html版本来显示网页。</p>
+<p><strong>Tips</strong>:</p>
+<ul>
+<li><p>&lt;!DOCTYPE&gt;声明位于文档中最前面的位置，处于&lt;html&gt;标签之前。</p>
+</li>
+<li><p>&lt;!DOCTYPE&gt;不是一个HTML标签，他就是文档类型声明标签。</p>
+</li>
+</ul>
+<h3 id="2-lang-语言"><a href="#2-lang-语言" class="headerlink" title="2. lang 语言"></a>2. lang 语言</h3><p>即 <strong>language</strong>，定义当前文档显示的语言。</p>
+<ul>
+<li>en为英语</li>
+<li><font color = red><strong>zh-CN为中文</strong></font></li>
+<li>fr为法语</li>
+</ul>
+<h3 id="3，charset-字符集"><a href="#3，charset-字符集" class="headerlink" title="3，charset 字符集"></a>3，charset 字符集</h3><p><strong>Character set</strong>是多个字符的集合，以便计算机能够识别和存储各种文字。</p>
+<p>在&lt;head&gt;标签内，可以通过<font color =red>&lt;meta&gt;</font>标签的<font color = red>charset</font>属性来规定HTML文档应该使用哪种字符编码。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span> = <span class="string">&quot;UTF-8&quot;</span> /&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>charset常用的值有: GB2312, BIG5, GBK 和 UTF-8, 其中<font color = red>UTF-8</font>被称为<font color = red>万国码</font>，基本包含全世界所有国家需要用到的字符。</p>
+<h2 id="HTML常用标签"><a href="#HTML常用标签" class="headerlink" title="HTML常用标签"></a>HTML常用标签</h2><h3 id="1-标题标签-lt-h1-gt-lt-h6-gt"><a href="#1-标题标签-lt-h1-gt-lt-h6-gt" class="headerlink" title="1. 标题标签 &lt;h1&gt; ~ &lt;h6&gt;"></a>1. 标题标签 &lt;h1&gt; ~ &lt;h6&gt;</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span> 我是一级标题 <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>依<font color = red><strong>重要性</strong></font>递减。字体<strong>变粗</strong></p>
+<h3 id="2-段落"><a href="#2-段落" class="headerlink" title="2. 段落"></a>2. 段落</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span> 我是一个段落标签 <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><font size = 4><strong>特点：</strong></font></p>
+<ul>
+<li><p>文本在一个段落中会根据浏览器窗口的大小<strong>自动换行</strong></p>
+</li>
+<li><p>段落与段落之间有<strong>空隙</strong></p>
+</li>
+</ul>
+<h3 id="3-强制换行标签"><a href="#3-强制换行标签" class="headerlink" title="3. 强制换行标签"></a>3. 强制换行标签</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><font size = 4><strong>特点：</strong></font></p>
+<ul>
+<li>单标签</li>
+<li>换行的行与原来的行<strong>没有空隙</strong>。</li>
+</ul>
+<h3 id="4-文本格式化标签"><a href="#4-文本格式化标签" class="headerlink" title="4. 文本格式化标签"></a>4. 文本格式化标签</h3><p><strong>粗体</strong>  <em>斜体</em>  下划线</p>
+<table>
+<thead>
+<tr>
+<th>语义</th>
+<th>标签</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>加粗</td>
+<td>&lt;strong&gt;&lt;/strong&gt; or &lt;b&gt;&lt;/b&gt;</td>
+<td>推荐strong</td>
+</tr>
+<tr>
+<td>倾斜</td>
+<td>&lt;em&gt;&lt;/em&gt; or &lt;i&gt;&lt;/i&gt;</td>
+<td>推荐em</td>
+</tr>
+<tr>
+<td>删除线</td>
+<td>&lt;del&gt;&lt;/del&gt; or &lt;s&gt;&lt;/s&gt;</td>
+<td>推荐del</td>
+</tr>
+<tr>
+<td>下划线</td>
+<td>&lt;ins&gt;&lt;/ins&gt; or &lt;u&gt;&lt;/u&gt;</td>
+<td>推荐ins</td>
+</tr>
+</tbody></table>
+<h3 id="5-lt-div-gt-和-lt-span-gt-标签"><a href="#5-lt-div-gt-和-lt-span-gt-标签" class="headerlink" title="5. &lt;div&gt;和&lt;span&gt;标签"></a>5. &lt;div&gt;和&lt;span&gt;标签</h3><p>他们是没有语义的，像是一个盒子，用来装内容。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>这是头部<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>今日价格<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>divison 表<strong>分割</strong>，<strong>分区</strong> </p>
+<p>span 表<strong>跨度</strong>，<strong>跨距</strong></p>
+<p><font size = 4><strong>特点：</strong></font></p>
+<ul>
+<li>&lt;div&gt;标签用来布局，但是在一行中只能放一个&lt;div&gt;，大盒子</li>
+<li>&lt;span&gt;标签用来布局，一行上可以使用多个&lt;div&gt;,小盒子</li>
+</ul>
+<h3 id="6-图像标签与路径"><a href="#6-图像标签与路径" class="headerlink" title="6. 图像标签与路径"></a>6. 图像标签与路径</h3><h4 id="6-1-图像标签"><a href="#6-1-图像标签" class="headerlink" title="6.1 图像标签"></a>6.1 图像标签</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span> = <span class="string">&quot;图像URL&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = red>src</font>是&lt;img&gt;标签的<font color = red>必须属性</font>，用于指定图像文件的<font color = red>路径和文件名</font>。</p>
+<p><strong>其他属性</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>src</td>
+<td>图片路径</td>
+<td>必须属性</td>
+</tr>
+<tr>
+<td>alt</td>
+<td>文本</td>
+<td>替换文本。图片不能显示即出现该文字</td>
+</tr>
+<tr>
+<td>title</td>
+<td>文本</td>
+<td>提示文本，鼠标放到图像上，显示的文字</td>
+</tr>
+<tr>
+<td>width</td>
+<td>像素</td>
+<td>设置图像的宽度</td>
+</tr>
+<tr>
+<td>height</td>
+<td>像素</td>
+<td>设置图像的高度</td>
+</tr>
+<tr>
+<td>border</td>
+<td>像素</td>
+<td>设置图像的边框粗细</td>
+</tr>
+</tbody></table>
+<h4 id="6-2-路径"><a href="#6-2-路径" class="headerlink" title="6.2 路径"></a>6.2 路径</h4><p>相对路径</p>
+<table>
+<thead>
+<tr>
+<th>相对路径分类</th>
+<th>符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>同一级路径</td>
+<td></td>
+<td>图像文件位于HTML文件的同一级，如&lt;img src = “baidu.gif” /&gt;</td>
+</tr>
+<tr>
+<td>下一级路径</td>
+<td>/</td>
+<td>图像文件位于HTML文件的下一级，如&lt;img src = “images/baidu.gif” /&gt;</td>
+</tr>
+<tr>
+<td>上一级路径</td>
+<td>../</td>
+<td>图像文件位于HTML文件的上一级，如&lt;img src = “../baidu.gif” /&gt;</td>
+</tr>
+</tbody></table>
+<p>绝对路径</p>
+<p><font color = red><strong>注意</strong></font>: 绝对路径的斜杠是    *<em>\*</em>    </p>
+<p>​          相对路径的斜杠是    <strong>/</strong></p>
+<h3 id="7-超链接标签"><a href="#7-超链接标签" class="headerlink" title="7. 超链接标签"></a>7. 超链接标签</h3><h4 id="7-1-链接格式"><a href="#7-1-链接格式" class="headerlink" title="7.1 链接格式"></a>7.1 链接格式</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span> = <span class="string">&quot;跳转目标&quot;</span> <span class="attr">target</span> = <span class="string">&quot;目标窗口的弹出方式&quot;</span>&gt;</span>文本或图像<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = blue>anchor   锚</font></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>href</td>
+<td>用于指定链接目标的url地址，（<strong>必须属性</strong>）当为标签应用href属性时，他就有了超链接的功能</td>
+</tr>
+<tr>
+<td>target</td>
+<td>用于指定链接页面的打开方式，其中_self为默认值，_blank为在新窗口中打开方式</td>
+</tr>
+</tbody></table>
+<h4 id="7-2-链接分类"><a href="#7-2-链接分类" class="headerlink" title="7.2 链接分类"></a>7.2 链接分类</h4><ul>
+<li>外部链接 </li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span> = <span class="string">&quot;http://www.baidu.com&quot;</span> &gt;</span>百度<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>内部链接</li>
+<li>空链接</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span> = <span class="string">&quot;#&quot;</span>&gt;</span>空链接<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载链接</li>
+</ul>
+<p>地址链接的是文件 <strong>.exe</strong> 或者是 <strong>zip</strong> 等压缩包形式</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span> = <span class="string">&quot;XXXX.zip&quot;</span>&gt;</span>下载文件<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>网页元素链接</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span> = <span class="string">&quot;http://baidu.com&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span> = <span class="string">&quot;img.jpg&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>锚点链接</p>
+<p>点击后<strong>快速定位</strong>到页面中的某个位置。</p>
+<ul>
+<li>在链接文本的href属性中，设置属性值为 <font color = red>#名字</font> 的形式，如 &lt;a href = “#two”&gt;第二集&lt;/a&gt;</li>
+<li>找到目标位置标签，里面添加一个id属性 = 刚才的名字，如 &lt;h3 id = “two”&gt;第二集简介&lt;/h3&gt;</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-注释与特殊字符"><a href="#8-注释与特殊字符" class="headerlink" title="8. 注释与特殊字符"></a>8. 注释与特殊字符</h3><h4 id="8-1-注释"><a href="#8-1-注释" class="headerlink" title="8.1 注释"></a>8.1 注释</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 注释语句 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8-2-特殊字符"><a href="#8-2-特殊字符" class="headerlink" title="8.2 特殊字符"></a>8.2 特殊字符</h4><img src ="https://img-blog.csdnimg.cn/20190316220926880.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjM1MDIzNw==,size_16,color_FFFFFF,t_70" title = "HTML特殊字符表"></article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="https://UltramanWJM.github.io">Jamal Wang</a></p><p> <span>Link:  </span><a href="https://ultramanwjm.github.io/2021/04/06/%E5%89%8D%E7%AB%AF%E4%BA%8C/">https://ultramanwjm.github.io/2021/04/06/%E5%89%8D%E7%AB%AF%E4%BA%8C/</a></p><p> <span>Copyright:  </span><span>Keep moving!!! Never stop!!!</span></p></div><div class="post-paginator"><a class="nextSlogan" href="/2021/04/02/%E5%89%8D%E7%AB%AF%E4%B8%80/" title="前端一"><span>NextPost ></span><br><span class="nextTitle">前端一</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF-%E2%80%94%E2%80%94%E2%80%94-Day2"><span class="toc-number">1.</span> <span class="toc-text">前端 ——— Day2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#VSCode-%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E9%AA%A8%E6%9E%B6%E6%A0%87%E7%AD%BE%E6%96%B0%E5%A2%9E%E4%BB%A3%E7%A0%81-%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90"><span class="toc-number">1.1.</span> <span class="toc-text">VSCode 工具生成骨架标签新增代码(自动生成)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-lt-DOCTYPE-gt-%E6%A0%87%E7%AD%BE"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. &lt;!DOCTYPE&gt; 标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-lang-%E8%AF%AD%E8%A8%80"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. lang 语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%BC%8Ccharset-%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="toc-number">1.1.3.</span> <span class="toc-text">3，charset 字符集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTML%E5%B8%B8%E7%94%A8%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.</span> <span class="toc-text">HTML常用标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A0%87%E9%A2%98%E6%A0%87%E7%AD%BE-lt-h1-gt-lt-h6-gt"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 标题标签 &lt;h1&gt; ~ &lt;h6&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%AE%B5%E8%90%BD"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 段落</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BC%BA%E5%88%B6%E6%8D%A2%E8%A1%8C%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 强制换行标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%96%87%E6%9C%AC%E6%A0%BC%E5%BC%8F%E5%8C%96%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.4.</span> <span class="toc-text">4. 文本格式化标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-lt-div-gt-%E5%92%8C-lt-span-gt-%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.5.</span> <span class="toc-text">5. &lt;div&gt;和&lt;span&gt;标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%9B%BE%E5%83%8F%E6%A0%87%E7%AD%BE%E4%B8%8E%E8%B7%AF%E5%BE%84"><span class="toc-number">1.2.6.</span> <span class="toc-text">6. 图像标签与路径</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E5%9B%BE%E5%83%8F%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.6.1.</span> <span class="toc-text">6.1 图像标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E8%B7%AF%E5%BE%84"><span class="toc-number">1.2.6.2.</span> <span class="toc-text">6.2 路径</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E8%B6%85%E9%93%BE%E6%8E%A5%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.7.</span> <span class="toc-text">7. 超链接标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-%E9%93%BE%E6%8E%A5%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.2.7.1.</span> <span class="toc-text">7.1 链接格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-%E9%93%BE%E6%8E%A5%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.7.2.</span> <span class="toc-text">7.2 链接分类</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E6%B3%A8%E9%87%8A%E4%B8%8E%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6"><span class="toc-number">1.2.8.</span> <span class="toc-text">8. 注释与特殊字符</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-1-%E6%B3%A8%E9%87%8A"><span class="toc-number">1.2.8.1.</span> <span class="toc-text">8.1 注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6"><span class="toc-number">1.2.8.2.</span> <span class="toc-text">8.2 特殊字符</span></a></li></ol></li></ol></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
